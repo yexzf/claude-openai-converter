@@ -1,0 +1,9 @@
+services:
+  converter:
+    build: .
+    image: yexzf/claude-openai-converter:latest
+    network_mode: "host"
+    env_file:
+      - .env
+    environment:
+      LISTEN_ADDR: ":8787"
