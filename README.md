@@ -14,7 +14,6 @@ claude-openai-converter
         |
         v
 OpenAI-compatible upstream
-  - OpenAI
   - 官方 sub2api 镜像
   - 其他 OpenAI 兼容服务
 ```
@@ -25,7 +24,6 @@ OpenAI-compatible upstream
 - 转换器单独发版，不和官方镜像绑在一起
 - Claude 侧仍然可以用 Anthropic 接口风格
 - 上游只要是 OpenAI-compatible 就能接
-- 如果你不想专门适配某个厂商，就直接把上游指到 OpenAI 或兼容代理
 
 ## 支持范围
 
@@ -43,26 +41,26 @@ OpenAI-compatible upstream
 | `UPSTREAM_BASE_URL` | 是 | 上游 OpenAI-compatible 基地址，如 `http://127.0.0.1:8080` 或 `https://api.xxx.com` |
 | `UPSTREAM_API_KEY` | 否 | 上游 Bearer Key |
 | `UPSTREAM_MODEL` | 否 | 默认上游模型名 |
-| `MODEL_MAP_JSON` | 否 | 请求模型到上游模型的映射 JSON，例如 `{"*":"gpt-5.5"}` |
+| `MODEL_MAP_JSON` | 否 | 请求模型到上游模型的映射 JSON，例如 `{"*":"any-upstream-model"}` |
 
 ### 模型映射
 
-如果你想把 Claude 模型统一转到某个 OpenAI 上游模型：
+如果你想把 Claude 模型统一转到某个上游模型：
 
 ```bash
-export MODEL_MAP_JSON='{"*":"gpt-5.5"}'
+export MODEL_MAP_JSON='{"*":"any-upstream-model"}'
 ```
 
 如果你只想指定默认上游模型，也可以只配：
 
 ```bash
-export UPSTREAM_MODEL='gpt-5.5'
+export UPSTREAM_MODEL='any-upstream-model'
 ```
 
 如果你想按 Claude 模型分流到不同上游模型，也可以这样配：
 
 ```bash
-export MODEL_MAP_JSON='{"claude-sonnet-4-6":"gpt-5.5","claude-opus-4-1":"gpt-5.4","*":"gpt-5.5"}'
+export MODEL_MAP_JSON='{"claude-sonnet-4-6":"model-a","claude-opus-4-1":"model-b","*":"model-a"}'
 ```
 
 ## Docker 运行
@@ -71,9 +69,9 @@ export MODEL_MAP_JSON='{"claude-sonnet-4-6":"gpt-5.5","claude-opus-4-1":"gpt-5.4
 docker run -d \
   --network host \
   --name claude-openai-converter \
-  -e UPSTREAM_BASE_URL=https://api.openai.com/v1 \
-  -e UPSTREAM_API_KEY=your-openai-key \
-  -e MODEL_MAP_JSON='{"*":"gpt-5.5"}' \
+  -e UPSTREAM_BASE_URL=https://your-upstream.example/v1 \
+  -e UPSTREAM_API_KEY=your-upstream-key \
+  -e MODEL_MAP_JSON='{"*":"any-upstream-model"}' \
   yexzf/claude-openai-converter:latest
 ```
 
